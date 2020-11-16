@@ -1,5 +1,8 @@
 package com.plotter;
 
+import com.plotter.domain.PlotterTypes;
+import com.plotter.implementations.HistogramPlotter;
+
 public class PlotterBuilder {
     public static Plotter getInstance(PlotterTypes plotterTypes){
         Plotter plotter;

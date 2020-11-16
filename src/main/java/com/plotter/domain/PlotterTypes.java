@@ -1,4 +1,4 @@
-package com.plotter;
+package com.plotter.domain;
 
 public enum PlotterTypes {
     HISTOGRAM,
