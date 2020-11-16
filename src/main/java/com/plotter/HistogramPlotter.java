@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class HistogramPlotter extends Plotter implements PlotterInterface{
+public class HistogramPlotter extends Plotter {
     private List<Integer> data;
     private HashMap<String,String> properties;
 
