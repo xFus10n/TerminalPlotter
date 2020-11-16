@@ -12,7 +12,7 @@ public class ComputeHistogram {
         this.output = new int[getMaxValue()][this.data.size()];
     }
 
-    public int getMaxValue(){
+    private int getMaxValue(){
         int max = 0;
         for (Integer val : data) {
             if (val > max) max = val;
@@ -20,7 +20,7 @@ public class ComputeHistogram {
         return max;
     }
 
-    public int[][] render(){
+    protected int[][] render(){
         int count = 0;
         for (int i = 0; i < getMaxValue(); i++) { //rows
             int tmpMaxValue = getMaxValue() - count;

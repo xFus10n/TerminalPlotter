@@ -19,23 +19,23 @@ public class TestHistogramPlotter {
         plotter.draw();
     }
 
-    @Test
-    public void compute() {
-        List<Integer> integers = Arrays.asList(1, 2, 4, 8, 15, 12, 10, 7, 5, 2);
-        ComputeHistogram histo = new ComputeHistogram(integers);
-        int maxValue = histo.getMaxValue();
-        assertEquals(15, maxValue);
-
-        int[][] render = histo.render();
-        for (int[] counts : render) {
-            for (int count : counts) {
-                String pix = "*";
-                String none = " ";
-                if (count==0){
-                    System.out.print(none);
-                }else System.out.print(pix);
-            }
-            System.out.println();
-        }
-    }
+//    @Test
+//    public void compute() {
+//        List<Integer> integers = Arrays.asList(1, 2, 4, 8, 15, 12, 10, 7, 5, 2);
+//        ComputeHistogram histo = new ComputeHistogram(integers);
+//        int maxValue = histo.getMaxValue();
+//        assertEquals(15, maxValue);
+//
+//        int[][] render = histo.render();
+//        for (int[] counts : render) {
+//            for (int count : counts) {
+//                String pix = "*";
+//                String none = " ";
+//                if (count==0){
+//                    System.out.print(none);
+//                }else System.out.print(pix);
+//            }
+//            System.out.println();
+//        }
+//    }
 }
