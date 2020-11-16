@@ -6,7 +6,7 @@ import java.util.List;
 
 public class HistogramPlotter extends Plotter {
     private List<Integer> data;
-    private HashMap<String,String> properties;
+    private final HashMap<String,String> properties;
 
     public HistogramPlotter() {
         this.data = new ArrayList<>();
@@ -26,6 +26,7 @@ public class HistogramPlotter extends Plotter {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public PlotterInterface setData(Object object) {
         try {
