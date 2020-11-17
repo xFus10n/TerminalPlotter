@@ -5,11 +5,16 @@ import java.util.List;
 public class ComputeHistogram {
     private final List<Integer> data;
     private final int[][] output;
+    public static final int isPixel = -1;
+    public static final int noPixel = 0;
 
-    public ComputeHistogram(List<Integer> data) {
+    public ComputeHistogram(List<Integer> data, boolean displayCounts) {
         this.data = data;
+        int size = this.data.size();
+        int max = getMaxValue();
         // int[rows][cols]
-        this.output = new int[getMaxValue()][this.data.size()];
+        if (displayCounts) size++; /* add element for scale / counts */
+        this.output = new int[max][size];
     }
 
     private int getMaxValue(){
@@ -20,16 +25,19 @@ public class ComputeHistogram {
         return max;
     }
 
-    protected int[][] render(){
+    protected int[][] render(boolean displayCounts){
         int count = 0;
         for (int i = 0; i < getMaxValue(); i++) { //rows
             int tmpMaxValue = getMaxValue() - count;
             for (int j = 0; j < this.data.size(); j++) { //cols
                 Integer element = this.data.get(j);
-                if (element == tmpMaxValue) {
-                    output[i][j]=1;
+                int k = j; /* for shifting */
+                if (k==0 && displayCounts) output[i][k]=tmpMaxValue; /* put counts into first element if displayCounts == true */
+                if (displayCounts) k++; /* increment if displayCounts == true */
+                if (element >= tmpMaxValue) { /* fill in the matrix */
+                    output[i][k]=isPixel;
                 }else{
-                    output[i][j]=0;
+                    output[i][k]=noPixel;
                 }
             }
             count++;

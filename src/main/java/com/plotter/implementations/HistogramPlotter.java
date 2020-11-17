@@ -13,6 +13,8 @@ public class HistogramPlotter extends Plotter {
     public static String SERIES_START = "series.start";
     public static String SERIES_PIXEL = "series.pixel";
     public static String SERIES_NONE = "series.none";
+    public static String SERIES_RESTRICT = "series.restrict";
+    public static String SERIES_COUNTS = "series.counts";
 
     private List<Integer> data;
     private final HashMap<String, String> properties;
@@ -30,24 +32,29 @@ public class HistogramPlotter extends Plotter {
         if (seriesEnd == 0) {
             seriesEnd = data.size();
         }
-//        for (int i = getSeriesStart(); i <= seriesEnd; i++) {
-//            System.out.println(data.get(i));
-//        }
+        if (getSeriesCounts()) seriesStart++;seriesEnd++; /* shift right since element[0] is counts lvl */
 
-        int[][] render = compute.render();
+        int[][] render = compute.render(getSeriesCounts());
         for (int[] counts : render) {
             for (int i = 0; i < counts.length; i++) {
                 int count = counts[i];
                 /* identify - start & stop */
-                if (i < seriesStart || i > seriesEnd){
-                    System.out.print("_");
-                    continue;
+                if (getSeriesCounts() && i == 0) { /* jump over if we need to show scale */
+                } else {
+                    if (i < seriesStart || i > seriesEnd) { /* if upper / lower limit set */
+                        System.out.print(getSeriesRestrict()); /* show restricted symbol*/
+                        continue;
+                    }
                 }
                 String pix = getSeriesPixel();
                 String none = getSeriesNone();
-                if (count == 0) {
+                if (count == ComputeHistogram.noPixel) {
                     System.out.print(none);
-                } else System.out.print(pix);
+                } else if (count == ComputeHistogram.isPixel) {
+                    System.out.print(pix);
+                } else {
+                    displayCountsScale(count);
+                }
             }
             System.out.println();
         }
@@ -68,7 +75,7 @@ public class HistogramPlotter extends Plotter {
             System.out.println(e.getMessage());
             System.exit(1);
         }
-        this.compute = new ComputeHistogram(this.data);
+        this.compute = new ComputeHistogram(this.data, getSeriesCounts());
         return this;
     }
 
@@ -99,5 +106,23 @@ public class HistogramPlotter extends Plotter {
             return properties.get(SERIES_NONE);
         }
         return " ";
+    }
+
+    private String getSeriesRestrict() {
+        if (properties.containsKey(SERIES_RESTRICT)) {
+            return properties.get(SERIES_RESTRICT);
+        }
+        return "";
+    }
+
+    private boolean getSeriesCounts() {
+        if (properties.containsKey(SERIES_COUNTS)) {
+            return Boolean.parseBoolean(properties.get(SERIES_COUNTS));
+        }
+        return false;
+    }
+
+    private void displayCountsScale(int counts) {
+        System.out.print(counts + "|");
     }
 }

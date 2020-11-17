@@ -15,6 +15,8 @@ public class TestHistogramPlotter {
         plotter
                 .setProperty("series.end", "5")
                 .setProperty("series.start", "1")
+                .setProperty("series.restrict", ".")
+//                .setProperty("series.counts", "true")
                 .setData(integers);
         plotter.draw();
     }
