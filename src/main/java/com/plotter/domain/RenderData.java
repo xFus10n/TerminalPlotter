@@ -3,8 +3,8 @@ package com.plotter.domain;
 import java.util.Comparator;
 
 public class RenderData implements Comparator<RenderData> {
-    private int counts;
-    private String row;
+    private final int counts;
+    private final String row;
 
     public RenderData(int counts, String row) {
         this.counts = counts;
@@ -15,16 +15,8 @@ public class RenderData implements Comparator<RenderData> {
         return counts;
     }
 
-    public void setCounts(int counts) {
-        this.counts = counts;
-    }
-
     public String getRow() {
         return row;
-    }
-
-    public void setRow(String row) {
-        this.row = row;
     }
 
     @Override

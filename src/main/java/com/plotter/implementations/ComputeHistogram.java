@@ -1,23 +1,43 @@
 package com.plotter.implementations;
 
+import com.plotter.domain.RenderData;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComputeHistogram {
     private final List<Integer> data;
-    private final int[][] output;
-    public static final int isPixel = -1;
-    public static final int noPixel = 0;
+    private String pixel = "X";
+    private String noPixel = " ";
+    private int width = 1;
+    private int interval = 0;
 
-    public ComputeHistogram(List<Integer> data, boolean displayCounts) {
+    public ComputeHistogram(List<Integer> data) {
         this.data = data;
-        int size = this.data.size();
-        int max = getMaxValue();
-        // int[rows][cols]
-        if (displayCounts) size++; /* add element for scale / counts */
-        this.output = new int[max][size];
     }
 
-    public int getMaxValue(){
+    public void setPixel(String pixel) {
+        if (!pixel.equals("")) {
+            this.pixel = pixel;
+        }
+    }
+
+    public void setNoPixel(String noPixel) {
+        if (!noPixel.equals("")) {
+            this.noPixel = noPixel;
+        }
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public int getMaxValue() {
         int max = 0;
         for (Integer val : data) {
             if (val > max) max = val;
@@ -25,23 +45,41 @@ public class ComputeHistogram {
         return max;
     }
 
-    public int[][] render(boolean displayCounts){
+    public List<RenderData> render() {
+        List<RenderData> out = new ArrayList<>();
+        StringBuilder row = new StringBuilder();
         int count = 0;
         for (int i = 0; i < getMaxValue(); i++) { //rows
             int tmpMaxValue = getMaxValue() - count;
+            row.setLength(0);
             for (int j = 0; j < this.data.size(); j++) { //cols
                 Integer element = this.data.get(j);
-                int k = j; /* for shifting */
-                if (k==0 && displayCounts) output[i][k]=tmpMaxValue; /* put counts into first element if displayCounts == true */
-                if (displayCounts) k++; /* increment if displayCounts == true */
                 if (element >= tmpMaxValue) { /* fill in the matrix */
-                    output[i][k]=isPixel;
-                }else{
-                    output[i][k]=noPixel;
+                    row.append(applyWidth(pixel));
+                } else {
+                    row.append((applyWidth(noPixel)));
                 }
+                row.append(applyInterval());
             }
+            out.add(new RenderData(tmpMaxValue, row.toString()));
             count++;
         }
-        return this.output;
+        return out;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    private String applyWidth(String element) {
+        return StringUtils.repeat(element, getWidth());
+    }
+
+    private String applyInterval() {
+        return StringUtils.repeat(noPixel, getInterval());
     }
 }

@@ -3,6 +3,7 @@ package com.plotter.implementations;
 import com.plotter.Plotter;
 import com.plotter.PlotterInterface;
 import com.plotter.domain.RenderData;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class HistogramPlotter extends Plotter {
 
     private List<Integer> data;
     private final HashMap<String, String> properties;
-    private ComputeHistogramV2 compute;
+    private ComputeHistogram compute;
 
     public HistogramPlotter() {
         this.data = new ArrayList<>();
@@ -35,15 +36,22 @@ public class HistogramPlotter extends Plotter {
 //        if (seriesEnd == 0) {
 //            seriesEnd = data.size();
 //        }
+        int maxNumberOfDigits = getNumberOfDigits(compute.getMaxValue()); /* scale digits for correct output */
         compute.setWidth(getSeriesWidth());
         compute.setInterval(getSeriesInterval());
         compute.setPixel(getSeriesPixel());
         compute.setNoPixel(getSeriesNone());
         List<RenderData> render = compute.render();
         for (RenderData renderData : render) {
-            if (showCounts()) System.out.print(renderData.getCounts());
+            if (showCounts()) System.out.print(correctScaleNumber(renderData.getCounts(), maxNumberOfDigits) + getSeriesNone());
             System.out.println(renderData.getRow());
         }
+    }
+
+    private String correctScaleNumber(int counts, int maxNumberOfDigits){
+        int currentNumberOfDigits = getNumberOfDigits(counts);
+        int lead = maxNumberOfDigits - currentNumberOfDigits;
+        return addLeadingZeros(lead, counts);
     }
 
     @Override
@@ -61,7 +69,7 @@ public class HistogramPlotter extends Plotter {
             System.out.println(e.getMessage());
             System.exit(1);
         }
-        this.compute = new ComputeHistogramV2(this.data);
+        this.compute = new ComputeHistogram(this.data);
         return this;
     }
 
@@ -120,5 +128,13 @@ public class HistogramPlotter extends Plotter {
             return Integer.parseInt(properties.get(SERIES_INTERVAL));
         }
         return 0;
+    }
+
+    private int getNumberOfDigits(int val){
+        return String.valueOf(val).length();
+    }
+    private String addLeadingZeros(int numberOfZeros, int val){
+        String leadingZeros = StringUtils.repeat("0", numberOfZeros);
+        return leadingZeros + val;
     }
 }
