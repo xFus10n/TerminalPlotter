@@ -2,27 +2,30 @@ import com.plotter.*;
 import com.plotter.domain.PlotterTypes;
 import com.plotter.domain.RenderData;
 import com.plotter.implementations.ComputeHistogram;
-import com.plotter.implementations.HistogramPlotter;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static com.plotter.implementations.HistogramPlotter.*;
 
 import java.util.Arrays;
 import java.util.List;
+
 
 public class TestHistogramPlotter {
     @Test
     public void basic() {
         Plotter plotter = PlotterBuilder.getInstance(PlotterTypes.HISTOGRAM);
-        List<Integer> integers = Arrays.asList(1, 2, 4, 8, 15, 12, 10, 7, 5, 2);
+        List<Integer> integers = Arrays.asList(1, 2, 4, 8, 15, 12, 10, 7, 5, 2, 1, 2, 4, 8, 15, 12, 10, 7, 5, 2,
+                1, 2, 4, 8, 15, 12, 10, 7, 5, 2, 1, 2, 4, 8, 15, 12, 10, 7, 5, 2);
         plotter
-//                .setProperty("series.end", "5")
-//                .setProperty("series.start", "1")
-//                .setProperty("series.restrict", ".")
-                .setProperty(HistogramPlotter.SERIES_PIXEL, "*")
-                .setProperty(HistogramPlotter.SERIES_NONE, ".")
-                .setProperty(HistogramPlotter.SERIES_WIDTH, "3")
-                .setProperty(HistogramPlotter.SERIES_INTERVAL, "1")
-                .setProperty("series.counts", "true")
+//                .setProperty("series.end", "5") /* not implemented */
+//                .setProperty("series.start", "1") /* not implemented */
+//                .setProperty("series.restrict", ".") /* not implemented */
+                .setProperty(SERIES_PIXEL, "*")
+                .setProperty(SERIES_NONE, ".")
+                .setProperty(SERIES_WIDTH, "2")
+                .setProperty(SERIES_INTERVAL, "1")
+                .setProperty(SERIES_COUNTS, "true")
+//                .setProperty(SERIES_VALS, "true") /* working not properly */
                 .setData(integers);
         plotter.draw();
     }

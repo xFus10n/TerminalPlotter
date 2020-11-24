@@ -19,6 +19,7 @@ public class HistogramPlotter extends Plotter {
     public static String SERIES_COUNTS = "series.counts";
     public static String SERIES_WIDTH = "series.width";
     public static String SERIES_INTERVAL = "series.interval";
+    public static String SERIES_VALS = "series.values";
 
     private List<Integer> data;
     private final HashMap<String, String> properties;
@@ -41,6 +42,7 @@ public class HistogramPlotter extends Plotter {
         compute.setInterval(getSeriesInterval());
         compute.setPixel(getSeriesPixel());
         compute.setNoPixel(getSeriesNone());
+        if (getSeriesVals()) compute.setShowValues();
         List<RenderData> render = compute.render();
         for (RenderData renderData : render) {
             if (showCounts()) System.out.print(correctScaleNumber(renderData.getCounts(), maxNumberOfDigits) + getSeriesNone());
@@ -128,6 +130,13 @@ public class HistogramPlotter extends Plotter {
             return Integer.parseInt(properties.get(SERIES_INTERVAL));
         }
         return 0;
+    }
+
+    private boolean getSeriesVals() {
+        if (properties.containsKey(SERIES_VALS)) {
+            return Boolean.parseBoolean(properties.get(SERIES_VALS));
+        }
+        return false;
     }
 
     private int getNumberOfDigits(int val){

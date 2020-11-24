@@ -6,12 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComputeHistogram {
+public class ComputeHistogram implements Compute {
     private final List<Integer> data;
     private String pixel = "X";
     private String noPixel = " ";
     private int width = 1;
     private int interval = 0;
+    private boolean showValues = false;
 
     public ComputeHistogram(List<Integer> data) {
         this.data = data;
@@ -21,6 +22,10 @@ public class ComputeHistogram {
         if (!pixel.equals("")) {
             this.pixel = pixel;
         }
+    }
+
+    public void setShowValues() {
+        this.showValues = true;
     }
 
     public void setNoPixel(String noPixel) {
@@ -52,8 +57,7 @@ public class ComputeHistogram {
         for (int i = 0; i < getMaxValue(); i++) { //rows
             int tmpMaxValue = getMaxValue() - count;
             row.setLength(0);
-            for (int j = 0; j < this.data.size(); j++) { //cols
-                Integer element = this.data.get(j);
+            for (Integer element : this.data) { //cols
                 if (element >= tmpMaxValue) { /* fill in the matrix */
                     row.append(applyWidth(pixel));
                 } else {
@@ -64,6 +68,8 @@ public class ComputeHistogram {
             out.add(new RenderData(tmpMaxValue, row.toString()));
             count++;
         }
+        /* show values*/
+        if (showValues) out.add(new RenderData(0,getValues(data.size())));
         return out;
     }
 
@@ -81,5 +87,15 @@ public class ComputeHistogram {
 
     private String applyInterval() {
         return StringUtils.repeat(noPixel, getInterval());
+    }
+
+    private String getValues(int elementSize) {
+        //TODO: draw vertical numbering, use interval & width
+        return null;
+    }
+
+    private int findNumOfDigits(int i){
+        int length = String.valueOf(i).length() - 1;
+        return length;
     }
 }
