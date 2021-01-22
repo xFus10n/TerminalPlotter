@@ -22,6 +22,8 @@ public class TestHistogramPlotter {
                 .setProperty(HistogramPlotter.SERIES_NONE, ".")
                 .setProperty(HistogramPlotter.SERIES_WIDTH, "3")
                 .setProperty(HistogramPlotter.SERIES_INTERVAL, "1")
+                .setProperty(HistogramPlotter.NORMALIZE_ENABLE, "true")
+                .setProperty(HistogramPlotter.NORMALIZE_SCALE, "10")
                 .setProperty("series.counts", "true")
                 .setData(integers);
         plotter.draw();
