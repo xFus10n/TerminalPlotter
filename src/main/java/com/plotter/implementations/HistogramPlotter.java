@@ -19,7 +19,8 @@ public class HistogramPlotter extends Plotter {
     public static String SERIES_COUNTS = "series.counts";
     public static String SERIES_WIDTH = "series.width";
     public static String SERIES_INTERVAL = "series.interval";
-    public static String SERIES_VALS = "series.values";
+    public static String NORMALIZE_ENABLE = "normalize.enable";
+    public static String NORMALIZE_SCALE = "normalize.scale";
 
     private List<Integer> data;
     private final HashMap<String, String> properties;
@@ -37,12 +38,13 @@ public class HistogramPlotter extends Plotter {
 //        if (seriesEnd == 0) {
 //            seriesEnd = data.size();
 //        }
+        //test
         int maxNumberOfDigits = getNumberOfDigits(compute.getMaxValue()); /* scale digits for correct output */
         compute.setWidth(getSeriesWidth());
         compute.setInterval(getSeriesInterval());
         compute.setPixel(getSeriesPixel());
         compute.setNoPixel(getSeriesNone());
-        if (getSeriesVals()) compute.setShowValues();
+        if (enableNormalize()) compute.setNormalization(getNormalizationScale());
         List<RenderData> render = compute.render();
         for (RenderData renderData : render) {
             if (showCounts()) System.out.print(correctScaleNumber(renderData.getCounts(), maxNumberOfDigits) + getSeriesNone());
@@ -132,18 +134,22 @@ public class HistogramPlotter extends Plotter {
         return 0;
     }
 
-    private boolean getSeriesVals() {
-        if (properties.containsKey(SERIES_VALS)) {
-            return Boolean.parseBoolean(properties.get(SERIES_VALS));
-        }
-        return false;
-    }
-
     private int getNumberOfDigits(int val){
         return String.valueOf(val).length();
     }
     private String addLeadingZeros(int numberOfZeros, int val){
         String leadingZeros = StringUtils.repeat("0", numberOfZeros);
         return leadingZeros + val;
+    }
+
+    private boolean enableNormalize() {
+        return properties.containsKey(NORMALIZE_ENABLE);
+    }
+
+    private int getNormalizationScale() {
+        if (properties.containsKey(NORMALIZE_SCALE)) {
+            return Integer.parseInt(properties.get(NORMALIZE_SCALE));
+        }
+        return 20; /* optimized value */
     }
 }
