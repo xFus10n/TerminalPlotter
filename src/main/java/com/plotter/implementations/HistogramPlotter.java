@@ -38,6 +38,7 @@ public class HistogramPlotter extends Plotter {
 //        if (seriesEnd == 0) {
 //            seriesEnd = data.size();
 //        }
+        //test
         int maxNumberOfDigits = getNumberOfDigits(compute.getMaxValue()); /* scale digits for correct output */
         compute.setWidth(getSeriesWidth());
         compute.setInterval(getSeriesInterval());
