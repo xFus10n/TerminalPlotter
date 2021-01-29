@@ -52,11 +52,10 @@ public class ComputeHistogram {
     }
 
     private void normalize(){
-        System.out.println("Scale set to " + normalizationScale);
+        System.out.println("Normalization scale : " + normalizationScale);
         List<Integer> normalized = new ArrayList<>();
         int max = getMaxValue();
         setDeNormalizedMaxValue(max); /* remember for denorm */
-        System.out.println("Max value " + normalizationScale + " = " + max + ", 1 = " + max/(double)normalizationScale);
         for (Integer integer : data) {
             double normCount = ( (double) integer / max) * normalizationScale;
             normalized.add((int) normCount);
