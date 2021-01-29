@@ -11,16 +11,16 @@ import java.util.List;
 
 public class HistogramPlotter extends Plotter {
     /* Constants */
-    public static String SERIES_END = "series.end";
-    public static String SERIES_START = "series.start";
-    public static String SERIES_PIXEL = "series.pixel";
-    public static String SERIES_NONE = "series.none";
-    public static String SERIES_RESTRICT = "series.restrict";
-    public static String SERIES_COUNTS = "series.counts";
-    public static String SERIES_WIDTH = "series.width";
-    public static String SERIES_INTERVAL = "series.interval";
-    public static String NORMALIZE_ENABLE = "normalize.enable";
-    public static String NORMALIZE_SCALE = "normalize.scale";
+    public static final String SERIES_END = "series.end";
+    public static final String SERIES_START = "series.start";
+    public static final String SERIES_PIXEL = "series.pixel";
+    public static final String SERIES_NONE = "series.none";
+    public static final String SERIES_RESTRICT = "series.restrict";
+    public static final String SERIES_COUNTS = "series.counts";
+    public static final String SERIES_WIDTH = "series.width";
+    public static final String SERIES_INTERVAL = "series.interval";
+    public static final String NORMALIZE_ENABLE = "normalize.enable";
+    public static final String NORMALIZE_SCALE = "normalize.scale";
 
     private List<Integer> data;
     private final HashMap<String, String> properties;
