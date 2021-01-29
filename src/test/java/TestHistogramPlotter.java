@@ -12,7 +12,8 @@ import java.util.List;
 public class TestHistogramPlotter {
     @Test
     public void basic() {
-        Plotter plotter = PlotterBuilder.getInstance(PlotterTypes.HISTOGRAM);
+        PlotterBuilder plotBuilder = PlotterBuilder.getInstance();
+        Plotter plotter = plotBuilder.getPlotter(PlotterTypes.HISTOGRAM);
         List<Integer> integers = Arrays.asList(1, 2, 4, 8, 15, 12, 10, 7, 5, 2);
         plotter
 //                .setProperty("series.end", "5")
