@@ -13,6 +13,7 @@ public class ComputeHistogram {
     private int width = 1;
     private int interval = 0;
     private int normalizationScale = 0;
+    private int deNormalizedMaxValue;
 
     public ComputeHistogram(List<Integer> data) {
         this.data = data;
@@ -54,6 +55,7 @@ public class ComputeHistogram {
         System.out.println("Scale set to " + normalizationScale);
         List<Integer> normalized = new ArrayList<>();
         int max = getMaxValue();
+        setDeNormalizedMaxValue(max); /* remember for denorm */
         System.out.println("Max value " + normalizationScale + " = " + max + ", 1 = " + max/(double)normalizationScale);
         for (Integer integer : data) {
             double normCount = ( (double) integer / max) * normalizationScale;
@@ -61,25 +63,6 @@ public class ComputeHistogram {
         }
         this.data = normalized;
     }
-
-//    public static List<Integer> normalize(Dataset<Row> dataset, int scale){
-//        System.out.println("Scale 100 -> " + scale);
-//        Row[] for100ks = (Row[]) dataset.select(col("for100k")).collect();
-//        List<Integer> data = new ArrayList<>();
-//        List<Integer> normalized = new ArrayList<>();
-//        int max = 0;
-//        for (Row row : for100ks) {
-//            int i = Integer.parseInt(row.get(0).toString());
-//            if (max < i) max = i;
-//            data.add(i);
-//        }
-//        System.out.println("Max value " + scale + " = " + max);
-//        for (Integer counts : data) {
-//            double normCount = ( (double) counts / max) * scale;
-//            normalized.add(((int) normCount));
-//        }
-//        return normalized;
-//    }
 
     public List<RenderData> render() {
         if (normalizationScale != 0) normalize();
@@ -98,10 +81,15 @@ public class ComputeHistogram {
                 }
                 row.append(applyInterval());
             }
+            if (normalizationScale != 0) tmpMaxValue = getDeNormalizedValue(tmpMaxValue); /* recalculate if normalized */
             out.add(new RenderData(tmpMaxValue, row.toString()));
             count++;
         }
         return out;
+    }
+
+    private int getDeNormalizedValue(int value) {
+        return ((value * getDeNormalizedMaxValue()) / normalizationScale);
     }
 
     public int getWidth() {
@@ -118,5 +106,13 @@ public class ComputeHistogram {
 
     private String applyInterval() {
         return StringUtils.repeat(noPixel, getInterval());
+    }
+
+    public int getDeNormalizedMaxValue() {
+        return deNormalizedMaxValue;
+    }
+
+    public void setDeNormalizedMaxValue(int deNormalizedMaxValue) {
+        this.deNormalizedMaxValue = deNormalizedMaxValue;
     }
 }
