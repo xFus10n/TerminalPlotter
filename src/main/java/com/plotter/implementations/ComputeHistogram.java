@@ -58,7 +58,8 @@ public class ComputeHistogram {
         setDeNormalizedMaxValue(max); /* remember for denorm */
         for (Integer integer : data) {
             double normCount = ( (double) integer / max) * normalizationScale;
-            normalized.add((int) normCount);
+            int rounded = (int) Math.round(normCount);
+            normalized.add(rounded);
         }
         this.data = normalized;
     }
@@ -68,7 +69,7 @@ public class ComputeHistogram {
         List<RenderData> out = new ArrayList<>();
         StringBuilder row = new StringBuilder();
         int count = 0;
-        for (int i = 0; i < getMaxValue(); i++) { //rows
+        for (int i = 0; i <= getMaxValue(); i++) { //rows
             int tmpMaxValue = getMaxValue() - count;
             row.setLength(0);
             for (int j = 0; j < this.data.size(); j++) { //cols
