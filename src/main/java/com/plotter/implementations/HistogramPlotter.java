@@ -96,7 +96,7 @@ public class HistogramPlotter extends Plotter {
         if (properties.containsKey(SERIES_PIXEL)) {
             return properties.get(SERIES_PIXEL);
         }
-        return "x";
+        return "X";
     }
 
     private String getSeriesNone() {

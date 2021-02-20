@@ -8,8 +8,8 @@ import java.util.List;
 
 public class ComputeHistogram {
     private List<Integer> data;
-    private String pixel = "X";
-    private String noPixel = " ";
+    private String pixel = "";
+    private String noPixel = "";
     private int width = 1;
     private int interval = 0;
     private int normalizationScale = 0;

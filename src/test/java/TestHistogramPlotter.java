@@ -29,19 +29,4 @@ public class TestHistogramPlotter {
                 .setData(integers);
         plotter.draw();
     }
-
-    @Test
-    public void compute() {
-        List<Integer> integers = Arrays.asList(1, 2, 4, 8, 15, 12, 10, 7, 5, 2);
-        ComputeHistogram histo = new ComputeHistogram(integers);
-        int maxValue = histo.getMaxValue();
-        assertEquals(15, maxValue);
-        histo.setInterval(1);
-        histo.setWidth(2);
-        List<RenderData> render = histo.render();
-        for (RenderData renderData : render) {
-            System.out.print(renderData.getCounts());
-            System.out.println(renderData.getRow());
-        }
-    }
 }
