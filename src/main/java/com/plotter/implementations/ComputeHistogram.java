@@ -31,7 +31,7 @@ public class ComputeHistogram {
         }
     }
 
-    public void setNormalization(int scale){
+    public void setNormalization(int scale) {
         this.normalizationScale = scale;
     }
 
@@ -51,13 +51,13 @@ public class ComputeHistogram {
         return max;
     }
 
-    private void normalize(){
+    private void normalize() {
         System.out.println("Normalization scale : " + normalizationScale);
         List<Integer> normalized = new ArrayList<>();
         int max = getMaxValue();
         setDeNormalizedMaxValue(max); /* remember for denorm */
         for (Integer integer : data) {
-            double normCount = ( (double) integer / max) * normalizationScale;
+            double normCount = ((double) integer / max) * normalizationScale;
             int rounded = (int) Math.round(normCount);
             normalized.add(rounded);
         }
@@ -81,11 +81,24 @@ public class ComputeHistogram {
                 }
                 row.append(applyInterval());
             }
-            if (normalizationScale != 0) tmpMaxValue = getDeNormalizedValue(tmpMaxValue); /* recalculate if normalized */
+            if (normalizationScale != 0)
+                tmpMaxValue = getDeNormalizedValue(tmpMaxValue); /* recalculate if normalized */
             out.add(new RenderData(tmpMaxValue, row.toString()));
             count++;
         }
+//        out.add(getXScale());
         return out;
+    }
+
+    private RenderData getXScale() {
+        StringBuilder xScale = new StringBuilder();
+        int pixelLen = pixel.length();
+        for (int j = 0; j < this.data.size(); j++) { //cols
+            xScale.append(applyWidth(pixel));
+//            xScale.append((applyWidth(noPixel)));
+            xScale.append(applyInterval());
+        }
+        return new RenderData(0, xScale.toString());
     }
 
     private int getDeNormalizedValue(int value) {
