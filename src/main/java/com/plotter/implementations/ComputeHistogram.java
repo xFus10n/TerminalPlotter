@@ -104,12 +104,17 @@ public class ComputeHistogram {
     }
 
     private ArrayList<RenderData> renderXScale(int[][] scale){
+        int step = getWidth() - 1;
         ArrayList<RenderData> renderData = new ArrayList<>();
         for (int[] ints : scale) {
+            int count = 0;
             StringBuilder builder = new StringBuilder();
             for (int anInt : ints) {
-                int step = getWidth() - 1;
-                builder.append(anInt)
+                String appender;
+                if (count++ < 9 && anInt == 0) {
+                    appender = " ";
+                } else appender = String.valueOf(anInt);
+                builder.append(appender)
                         .append(StringUtils.repeat(" ", step))
                         .append(" ");
             }
