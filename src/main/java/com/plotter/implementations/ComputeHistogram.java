@@ -86,19 +86,36 @@ public class ComputeHistogram {
             out.add(new RenderData(tmpMaxValue, row.toString()));
             count++;
         }
-//        out.add(getXScale());
+        out.addAll(renderXScale(getXScale()));
         return out;
     }
 
-    private RenderData getXScale() {
-        StringBuilder xScale = new StringBuilder();
-        int pixelLen = pixel.length();
+    private int[][] getXScale() {
+        int maxDecimalsPlaces = String.valueOf(this.data.size()).length();
+        int[][] output = new int[maxDecimalsPlaces][this.data.size()];
         for (int j = 0; j < this.data.size(); j++) { //cols
-            xScale.append(applyWidth(pixel));
-//            xScale.append((applyWidth(noPixel)));
-            xScale.append(applyInterval());
+            char[] charArray = String.valueOf(j + 1).toCharArray();
+            for (int i = 0; i < charArray.length; i++) {
+                char c = charArray[i];
+                output[i][j] = Integer.parseInt(String.valueOf(c));
+            }
         }
-        return new RenderData(0, xScale.toString());
+        return output;
+    }
+
+    private ArrayList<RenderData> renderXScale(int[][] scale){
+        ArrayList<RenderData> renderData = new ArrayList<>();
+        for (int[] ints : scale) {
+            StringBuilder builder = new StringBuilder();
+            for (int anInt : ints) {
+                int step = getWidth() - 1;
+                builder.append(anInt)
+                        .append(StringUtils.repeat(" ", step))
+                        .append(" ");
+            }
+            renderData.add(new RenderData(0, builder.toString()));
+        }
+        return renderData;
     }
 
     private int getDeNormalizedValue(int value) {
