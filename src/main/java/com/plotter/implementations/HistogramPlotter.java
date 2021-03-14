@@ -22,13 +22,14 @@ public class HistogramPlotter extends Plotter {
     public static final String NORMALIZE_ENABLE = "normalize.enable";
     public static final String NORMALIZE_SCALE = "normalize.scale";
 
-    private List<Integer> data;
+    private List<Object> data;
     private final HashMap<String, String> properties;
-    private ComputeHistogram compute;
+    private final Compute compute;
 
     public HistogramPlotter() {
         this.data = new ArrayList<>();
         this.properties = new HashMap<>();
+        this.compute = new ComputeHistogram();
     }
 
     @Override
@@ -68,12 +69,12 @@ public class HistogramPlotter extends Plotter {
     @Override
     public PlotterInterface setData(Object object) {
         try {
-            this.data = (List<Integer>) object;
+            this.data = (List<Object>) object;
         } catch (ClassCastException e) {
             System.out.println(e.getMessage());
             System.exit(1);
         }
-        this.compute = new ComputeHistogram(this.data);
+        this.compute.setData(this.data);
         return this;
     }
 

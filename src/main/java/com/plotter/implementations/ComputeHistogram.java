@@ -5,8 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ComputeHistogram {
+public class ComputeHistogram implements Compute {
     private List<Integer> data;
     private String pixel = "";
     private String noPixel = "";
@@ -19,30 +20,39 @@ public class ComputeHistogram {
         this.data = data;
     }
 
+    public ComputeHistogram() {
+    }
+
+    @Override
     public void setPixel(String pixel) {
         if (!pixel.equals("")) {
             this.pixel = pixel;
         }
     }
 
+    @Override
     public void setNoPixel(String noPixel) {
         if (!noPixel.equals("")) {
             this.noPixel = noPixel;
         }
     }
 
+    @Override
     public void setNormalization(int scale) {
         this.normalizationScale = scale;
     }
 
+    @Override
     public void setWidth(int width) {
         this.width = width;
     }
 
+    @Override
     public void setInterval(int interval) {
         this.interval = interval;
     }
 
+    @Override
     public int getMaxValue() {
         int max = 0;
         for (Integer val : data) {
@@ -51,7 +61,8 @@ public class ComputeHistogram {
         return max;
     }
 
-    private void normalize() {
+    @Override
+    public void normalize() {
         System.out.println("Normalization scale : " + normalizationScale);
         List<Integer> normalized = new ArrayList<>();
         int max = getMaxValue();
@@ -64,6 +75,7 @@ public class ComputeHistogram {
         this.data = normalized;
     }
 
+    @Override
     public List<RenderData> render() {
         if (normalizationScale != 0) normalize();
         List<RenderData> out = new ArrayList<>();
@@ -72,8 +84,7 @@ public class ComputeHistogram {
         for (int i = 0; i <= getMaxValue(); i++) { //rows
             int tmpMaxValue = getMaxValue() - count;
             row.setLength(0);
-            for (int j = 0; j < this.data.size(); j++) { //cols
-                Integer element = this.data.get(j);
+            for (Integer element : this.data) { //cols
                 if (element >= tmpMaxValue) { /* fill in the matrix */
                     row.append(applyWidth(pixel));
                 } else {
@@ -90,7 +101,8 @@ public class ComputeHistogram {
         return out;
     }
 
-    private int[][] getXScale() {
+    @Override
+    public int[][] getXScale() {
         int maxDecimalsPlaces = String.valueOf(this.data.size()).length();
         int[][] output = new int[maxDecimalsPlaces][this.data.size()];
         for (int j = 0; j < this.data.size(); j++) { //cols
@@ -103,7 +115,15 @@ public class ComputeHistogram {
         return output;
     }
 
-    private ArrayList<RenderData> renderXScale(int[][] scale){
+    @Override
+    public ArrayList<RenderData> renderXScale(Object scaleObj){
+        /* cast */
+        int[][] scale;
+        if (scaleObj instanceof int[][]) {
+            scale = (int[][]) scaleObj;
+        } else scale = new int[1][1];
+
+        /* Render */
         int step = getWidth() - 1;
         ArrayList<RenderData> renderData = new ArrayList<>();
         for (int[] ints : scale) {
@@ -149,5 +169,10 @@ public class ComputeHistogram {
 
     public void setDeNormalizedMaxValue(int deNormalizedMaxValue) {
         this.deNormalizedMaxValue = deNormalizedMaxValue;
+    }
+
+    @Override
+    public void setData(List<Object> data){
+        this.data = data.stream().map(x -> (int) x).collect(Collectors.toList());
     }
 }
