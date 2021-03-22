@@ -14,6 +14,7 @@ public class HistogramPlotter extends Plotter {
     public static final String SERIES_END = "series.end";
     public static final String SERIES_START = "series.start";
     public static final String SERIES_PIXEL = "series.pixel";
+    public static final String SERIES_LENGTH = "series.length";
     public static final String SERIES_NONE = "series.none";
     public static final String SERIES_RESTRICT = "series.restrict";
     public static final String SERIES_COUNTS = "series.counts";
@@ -45,15 +46,36 @@ public class HistogramPlotter extends Plotter {
         compute.setInterval(getSeriesInterval());
         compute.setPixel(getSeriesPixel());
         compute.setNoPixel(getSeriesNone());
+        List<List<RenderData>> group = new ArrayList<>();
         if (enableNormalize()) compute.setNormalization(getNormalizationScale());
-        List<RenderData> render = compute.render();
-        for (RenderData renderData : render) {
-            if (showCounts()) System.out.print(correctScaleNumber(renderData.getCounts(), maxNumberOfDigits) + getSeriesNone());
+        List<RenderData> initialRender = compute.render();
+//        List<RenderData> listSizedRender = new ArrayList<>();
+        for (int i = 0; i < initialRender.size(); i++) {
+            RenderData renderData = initialRender.get(i);
+            List<RenderData> splitRender = RenderData.splitRenderData(renderData, getSeriesLength());
+            for (int j = 0; j < splitRender.size(); j++) {
+                RenderData renderSize = splitRender.get(j);
+                if (group.size() < j + 1) {
+                    List<RenderData> listSizedRender = new ArrayList<>();
+                    listSizedRender.add(renderSize);
+                    group.add(listSizedRender);
+                } else {
+                    List<RenderData> listFromGroup = group.get(j);
+                    listFromGroup.add(renderSize);
+                }
+            }
+        }
+        List<RenderData> stack = new ArrayList<>();
+        group.forEach(stack::addAll);
+
+        for (RenderData renderData : stack) {
+            if (showCounts())
+                System.out.print(correctScaleNumber(renderData.getCounts(), maxNumberOfDigits) + getSeriesNone());
             System.out.println(renderData.getRow());
         }
     }
 
-    private String correctScaleNumber(int counts, int maxNumberOfDigits){
+    private String correctScaleNumber(int counts, int maxNumberOfDigits) {
         int currentNumberOfDigits = getNumberOfDigits(counts);
         int lead = maxNumberOfDigits - currentNumberOfDigits;
         return addLeadingZeros(lead, counts);
@@ -128,6 +150,13 @@ public class HistogramPlotter extends Plotter {
         return 1;
     }
 
+    private int getSeriesLength() {
+        if (properties.containsKey(SERIES_LENGTH)) {
+            return Integer.parseInt(properties.get(SERIES_LENGTH));
+        }
+        return 40;
+    }
+
     private int getSeriesInterval() {
         if (properties.containsKey(SERIES_INTERVAL)) {
             return Integer.parseInt(properties.get(SERIES_INTERVAL));
@@ -135,10 +164,11 @@ public class HistogramPlotter extends Plotter {
         return 0;
     }
 
-    private int getNumberOfDigits(int val){
+    private int getNumberOfDigits(int val) {
         return String.valueOf(val).length();
     }
-    private String addLeadingZeros(int numberOfZeros, int val){
+
+    private String addLeadingZeros(int numberOfZeros, int val) {
         String leadingZeros = StringUtils.repeat("0", numberOfZeros);
         return leadingZeros + val;
     }

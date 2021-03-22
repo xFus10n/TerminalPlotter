@@ -25,8 +25,16 @@ public class TestHistogramPlotter {
                 .setProperty(HistogramPlotter.SERIES_INTERVAL, "1")
                 .setProperty(HistogramPlotter.NORMALIZE_ENABLE, "true")
                 .setProperty(HistogramPlotter.NORMALIZE_SCALE, "10")
-                .setProperty("series.counts", "true")
+                .setProperty(HistogramPlotter.SERIES_COUNTS, "true")
+                .setProperty(HistogramPlotter.SERIES_LENGTH, "50")
                 .setData(integers);
         plotter.draw();
+    }
+
+    @Test
+    public void testRenderSplit(){
+        RenderData renderData = new RenderData(20, "abcdefghijklmnopqrst");
+        List<RenderData> renderList = RenderData.splitRenderData(renderData, 3);
+        renderList.forEach(render -> System.out.println(render.getRow()));
     }
 }
